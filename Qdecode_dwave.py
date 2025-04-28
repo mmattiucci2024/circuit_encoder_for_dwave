@@ -1,11 +1,15 @@
 ################################################################################
-# File: dwave_decode.py
+# File: Qdecode_dwave.py
 # Ver: 1.2
 # Updated: 28 Apr 2025
-# Goal: Decoding a quadratic form using only a Q matrix
-#       stored in a file. This is provided by DWAVE Quantum
-#       Annealing Computation Services.
-#       The binary samples found are saved to a file.
+# Goal: Solve a QUBO problem using only a Q matrix
+#       stored in a file as input and DWAVE Quantum
+#       Annealing Computation Services as processing.
+#       The binary samples found by DWAVE are saved to a file.
+#       If you have the Q matrix you have to save it into a file that is good
+#       as input for this software. look at the end of this program for 
+#       (in the comments) an example code to save the file starting from 
+#       a Q matrix.
 ################################################################################
 # WARNING! This code can be executed only in the venv defined
 #          by DWAVE (E.G. Linux virtual environment) during
@@ -118,3 +122,28 @@ with open("mydata/"+my_output_file_name, 'w') as my_file_handler:
     my_file_handler.close()
 print("done.")
 quit()
+
+"""
+EXAMPLE OF HOW TO CONVERT A Q MATRIX INTO A SPARSE LIST AND STORE IT IN A FILE:
+    # Q is a sparse matrix so it can be converted into a list such as [...,i,j,Q[i][j],...]
+    n = ??? # write the Q dimension.
+    encoded_Q_list = []
+    n_list = 0
+    for i in range(n):
+        for j in range(n):
+            if Q[i][j] != 0:
+                n_list += 1
+                encoded_Q_list.append(i)
+                encoded_Q_list.append(j)
+                encoded_Q_list.append(Q[i][j])
+    # The mentioned list can be stored in a file as follows:
+    my_output_file_name += "???" # write the output file name.
+    print("Saving output file [",my_output_file_name,"]...",end="")
+    with open(my_output_file_name, 'w') as my_file_handler:
+        my_file_handler.write("{}\n".format(str(n)))
+        for item in encoded_Q_list:
+            my_file_handler.write("{}\n".format(str(item)))
+        my_file_handler.close()
+    print("done.")
+
+"""
